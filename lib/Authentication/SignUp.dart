@@ -1,4 +1,6 @@
+import 'package:edustack/Authentication/Login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import "package:google_fonts/google_fonts.dart";
 
 class SignUP extends StatefulWidget {
@@ -18,7 +20,7 @@ class _SignUPState extends State<SignUP> {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.only(top: 200, left: 40, bottom: 60),
+                padding: const EdgeInsets.only(top: 170, left: 40, bottom: 60),
                 decoration: const BoxDecoration(
                   color: Color.fromRGBO(44, 55, 149, 0.57),
                   borderRadius: BorderRadius.only(
@@ -58,6 +60,7 @@ class _SignUPState extends State<SignUP> {
                   children: [
                     Text("Email"),
                     Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
@@ -69,8 +72,8 @@ class _SignUPState extends State<SignUP> {
                       ),
                       child: TextFormField(
                         decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 20),
+                            suffixIcon: Icon(Icons.clear_outlined),
+                            // contentPadding: EdgeInsets.only(left: 20),
                             fillColor: Colors.white,
                             hintText: 'Email',
                             border: InputBorder.none),
@@ -81,6 +84,7 @@ class _SignUPState extends State<SignUP> {
                     ),
                     Text("Password"),
                     Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
@@ -92,22 +96,19 @@ class _SignUPState extends State<SignUP> {
                       ),
                       child: TextFormField(
                         decoration: const InputDecoration(
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 20),
+                            suffixIcon: Icon(Icons.remove_red_eye_outlined),
                             fillColor: Colors.white,
                             hintText: 'password',
                             border: InputBorder.none),
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
-                    ),
-                    const SizedBox(
-                      height: 30,
+                      height: 40,
                     ),
                     Container(
                       height: 50,
                       width: 300,
+                      padding: EdgeInsets.only(left: 25),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30)),
                       child: ElevatedButton(
@@ -124,7 +125,7 @@ class _SignUPState extends State<SignUP> {
                           Navigator.of(context).pop();
                         },
                         child: Text(
-                          "Submit",
+                          "SignUp",
                           style: GoogleFonts.inter(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
@@ -147,12 +148,20 @@ class _SignUPState extends State<SignUP> {
                           const SizedBox(
                             width: 5,
                           ),
-                          Text(
-                            "Login",
-                            style: GoogleFonts.anekTamil(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 19,
-                                color: const Color.fromRGBO(202, 74, 74, 1)),
+                          GestureDetector(
+                            child: Text(
+                              "Login",
+                              style: GoogleFonts.anekTamil(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 19,
+                                  color: const Color.fromRGBO(202, 74, 74, 1)),
+                            ),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return const Login();
+                              }));
+                            },
                           )
                         ],
                       ),
