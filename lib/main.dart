@@ -1,40 +1,53 @@
-import 'package:edustack/Authentication/Login.dart';
-import 'package:edustack/Home.dart';
+import 'package:edustack/Authentication/login.dart';
+import 'package:edustack/admin/add_course.dart';
+import 'package:edustack/admin/add_course_content.dart';
+import 'package:edustack/admin/add_course_topic_content.dart';
+import 'package:edustack/admin/give_admin_access.dart';
+
+import 'package:edustack/home.dart';
+import 'package:edustack/config/active_screens.dart';
+import 'package:edustack/pratik/course.dart';
+import 'package:edustack/pratik/course_content.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  ActiveScreen.LOGINSCREEN = true;
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Widget? getActiveScreen() {
+    print("**********${ActiveScreen.COURSESCREEN}");
+    if (ActiveScreen.LOGINSCREEN) {
+      return Login(isSignup: false, mainSetState: setState);
+    } else if (ActiveScreen.SIGNUPSCREEN) {
+      return Login(isSignup: true, mainSetState: setState);
+    } else if (ActiveScreen.HOMESCREEN) {
+      return Home(mainSetState: setState);
+    } else if (ActiveScreen.COURSESCREEN) {
+      return Edutask(mainSetState: setState);
+    } else if (ActiveScreen.COURSECONTENTSCREEN) {
+      return CourseContent(mainSetState: setState);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Home(),
+      home: GiveAdminAccess(),
     );
   }
 }
