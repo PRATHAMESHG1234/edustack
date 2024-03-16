@@ -54,6 +54,11 @@ class _LoginState extends State<Login> {
             ActiveScreen.COURSECONTENTSCREEN = false;
             ActiveScreen.LOGINSCREEN = false;
             ActiveScreen.COURSESCREEN = false;
+            ActiveScreen.ADDCOURSESCREEN = false;
+            ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+            ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+            ActiveScreen.ADDADMINSCREEN = false;
+            ActiveScreen.ADDSCREENNAVIGATOR = false;
           });
         }
       } else {

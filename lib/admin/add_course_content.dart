@@ -1,10 +1,14 @@
+import 'package:edustack/config/active_screens.dart';
+import 'package:edustack/config/constant.dart';
 import 'package:edustack/config/databse.dart';
+import 'package:edustack/config/model_classes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 class AddCourseContent extends StatefulWidget {
-  const AddCourseContent({super.key});
+  final Function mainSetState;
+  const AddCourseContent({super.key, required this.mainSetState});
 
   @override
   State<AddCourseContent> createState() => _AddCourseContentState();
@@ -24,6 +28,55 @@ class _AddCourseContentState extends State<AddCourseContent> {
     _dataBaseManager = DataBaseManager();
   }
 
+  Future<void> _addCourseContent() async {
+    bool authValidation = _formKey.currentState!.validate();
+    bool retVal;
+    print(authValidation);
+    if (authValidation) {
+      print("hii i get call");
+      CourseContentList newCourseContent = CourseContentList(
+          title: _courseContentTitleController!.text.trim(),
+          description: _descriptionController!.text.trim(),
+          courseId: AppConstants.SELECTEDCOURSE!.id!);
+
+      retVal = await _dataBaseManager!.insertCourseContent(newCourseContent);
+      if (retVal) {
+        widget.mainSetState(() {
+          ActiveScreen.SIGNUPSCREEN = false;
+          ActiveScreen.HOMESCREEN = true;
+          ActiveScreen.COURSECONTENTSCREEN = false;
+          ActiveScreen.LOGINSCREEN = false;
+          ActiveScreen.COURSESCREEN = false;
+          ActiveScreen.ADDCOURSESCREEN = false;
+          ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+          ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+          ActiveScreen.ADDADMINSCREEN = false;
+          ActiveScreen.ADDSCREENNAVIGATOR = false;
+        });
+      }
+
+      if (retVal) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Course Content Added Successful"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Course Content Addedition Failed"),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Course Content Addedition Failed"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,10 +87,26 @@ class _AddCourseContentState extends State<AddCourseContent> {
           children: [
             Row(
               children: [
-                Container(
-                  height: 56,
-                  width: 56,
-                  child: const Icon(Icons.arrow_back_ios_new),
+                GestureDetector(
+                  child: Container(
+                    height: 56,
+                    width: 56,
+                    child: const Icon(Icons.arrow_back_ios_new),
+                  ),
+                  onTap: () {
+                    widget.mainSetState(() {
+                      ActiveScreen.SIGNUPSCREEN = false;
+                      ActiveScreen.HOMESCREEN = false;
+                      ActiveScreen.COURSECONTENTSCREEN = false;
+                      ActiveScreen.LOGINSCREEN = false;
+                      ActiveScreen.COURSESCREEN = false;
+                      ActiveScreen.ADDCOURSESCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                      ActiveScreen.ADDADMINSCREEN = false;
+                      ActiveScreen.ADDSCREENNAVIGATOR = true;
+                    });
+                  },
                 ),
                 Expanded(
                   child: Container(
@@ -225,6 +294,7 @@ class _AddCourseContentState extends State<AddCourseContent> {
                   ),
                 ),
               ),
+              onTap: _addCourseContent,
             )
           ],
         ),

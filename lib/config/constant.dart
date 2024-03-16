@@ -59,7 +59,6 @@ class AppConstants {
 
   static UserModelClass? CURRENTUSER;
 
-  static int SELECTEDCOURSEID = -1;
-  static int SELECTEDCONTENTEID = -1;
-  static String SELECTEDCOURSETITLE = "";
+  static CoursesModelClass? SELECTEDCOURSE;
+  static CourseContentList? SELECTEDTOPIC;
 }

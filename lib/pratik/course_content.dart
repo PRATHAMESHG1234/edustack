@@ -56,7 +56,7 @@ class _CourseContentState extends State<CourseContent> {
   Future<void> _getPrimaryData() async {
     final localDb = await _dataBaseManager;
     List<TopicContent> primarycourses = await localDb!
-        .getTopicContentByCourseContentId(AppConstants.SELECTEDCONTENTEID);
+        .getTopicContentByCourseContentId(AppConstants.SELECTEDTOPIC!.id!);
     setState(() {
       topicContentList = primarycourses;
     });
@@ -111,7 +111,7 @@ class _CourseContentState extends State<CourseContent> {
                           Container(
                             padding: EdgeInsets.only(left: 20),
                             child: Text(
-                              AppConstants.SELECTEDCOURSETITLE,
+                              AppConstants.SELECTEDCOURSE!.title,
                               style: GoogleFonts.anekTamil(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 40,
@@ -140,7 +140,7 @@ class _CourseContentState extends State<CourseContent> {
                           end: Alignment.bottomCenter),
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset("assets/java.png"),
+                    child: Image.asset(AppConstants.SELECTEDCOURSE!.imagePath),
                   ),
                 ],
               ),
@@ -253,7 +253,20 @@ class _CourseContentState extends State<CourseContent> {
       ),
       floatingActionButton: (AppConstants.CURRENTUSER!.isAdmin == 1)
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                widget.mainSetState(() {
+                  ActiveScreen.SIGNUPSCREEN = false;
+                  ActiveScreen.HOMESCREEN = false;
+                  ActiveScreen.COURSECONTENTSCREEN = false;
+                  ActiveScreen.LOGINSCREEN = false;
+                  ActiveScreen.COURSESCREEN = false;
+                  ActiveScreen.ADDCOURSESCREEN = false;
+                  ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                  ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                  ActiveScreen.ADDADMINSCREEN = false;
+                  ActiveScreen.ADDSCREENNAVIGATOR = true;
+                });
+              },
               child: Icon(Icons.add),
             )
           : null,

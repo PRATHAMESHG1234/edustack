@@ -60,12 +60,13 @@ class _EdutaskState extends State<Edutask> {
     print("////////////");
     _dataBaseManager = DataBaseManager();
     _getPrimaryData();
+    AppConstants.SELECTEDTOPIC = null;
   }
 
   Future<void> _getPrimaryData() async {
     final localDb = await _dataBaseManager;
     List<CourseContentList> primarycourses = await localDb!
-        .getCourseContentListsByCourseId(AppConstants.SELECTEDCOURSEID);
+        .getCourseContentListsByCourseId(AppConstants.SELECTEDCOURSE!.id!);
     setState(() {
       courcedetails = primarycourses;
     });
@@ -78,9 +79,6 @@ class _EdutaskState extends State<Edutask> {
   }
 
   Widget DisplayCources() {
-    print(
-      AppConstants.SELECTEDCOURSETITLE,
-    );
     if (courseflag) {
     } else {}
     return Scaffold(
@@ -129,7 +127,7 @@ class _EdutaskState extends State<Edutask> {
                           Container(
                             padding: EdgeInsets.only(left: 20),
                             child: Text(
-                              AppConstants.SELECTEDCOURSETITLE,
+                              AppConstants.SELECTEDCOURSE!.title,
                               style: GoogleFonts.anekTamil(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 40,
@@ -158,7 +156,7 @@ class _EdutaskState extends State<Edutask> {
                           end: Alignment.bottomCenter),
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset("assets/java.png"),
+                    child: Image.asset(AppConstants.SELECTEDCOURSE!.imagePath),
                   ),
                 ],
               ),
@@ -230,8 +228,8 @@ class _EdutaskState extends State<Edutask> {
                                   ActiveScreen.COURSESCREEN = false;
 
                                   widget.mainSetState(() {
-                                    AppConstants.SELECTEDCONTENTEID =
-                                        courcedetails[index].id!;
+                                    AppConstants.SELECTEDTOPIC =
+                                        courcedetails[index];
                                   });
                                 });
                               },
@@ -266,7 +264,20 @@ class _EdutaskState extends State<Edutask> {
       ),
       floatingActionButton: (AppConstants.CURRENTUSER!.isAdmin == 1)
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                widget.mainSetState(() {
+                  ActiveScreen.SIGNUPSCREEN = false;
+                  ActiveScreen.HOMESCREEN = false;
+                  ActiveScreen.COURSECONTENTSCREEN = false;
+                  ActiveScreen.LOGINSCREEN = false;
+                  ActiveScreen.COURSESCREEN = false;
+                  ActiveScreen.ADDCOURSESCREEN = false;
+                  ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                  ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                  ActiveScreen.ADDADMINSCREEN = false;
+                  ActiveScreen.ADDSCREENNAVIGATOR = true;
+                });
+              },
               child: Icon(Icons.add),
             )
           : null,

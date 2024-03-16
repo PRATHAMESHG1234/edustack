@@ -96,20 +96,20 @@ class DataBaseManager {
     }
   }
 
-  Future<void> deleteUser(UserModelClass user) async {
+  Future<void> deleteUser(int id) async {
     try {
       final localDB = await database;
       await localDB.delete(
         DatabaseTableConstants.USERTABLENAME,
         where: "id=?",
-        whereArgs: [user.id],
+        whereArgs: [id],
       );
     } catch (e) {
       print("Error deleting user: $e");
     }
   }
 
-  Future<int> insertCourseDetails(CoursesModelClass course) async {
+  Future<bool> insertCourseDetails(CoursesModelClass course) async {
     try {
       final localDB = await database;
       int courseId = await localDB.insert(
@@ -117,10 +117,10 @@ class DataBaseManager {
         course.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      return courseId;
+      return true;
     } catch (e) {
       print("Error inserting user: $e");
-      return -1;
+      return false;
     }
   }
 
@@ -152,7 +152,7 @@ class DataBaseManager {
     }
   }
 
-  Future<int> insertCourseContent(CourseContentList course) async {
+  Future<bool> insertCourseContent(CourseContentList course) async {
     try {
       final localDB = await database;
       int courseContentId = await localDB.insert(
@@ -160,10 +160,10 @@ class DataBaseManager {
         course.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      return courseContentId;
+      return true;
     } catch (e) {
       print("Error inserting course content: $e");
-      return -1;
+      return false;
     }
   }
 

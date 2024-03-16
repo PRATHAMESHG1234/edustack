@@ -1,10 +1,12 @@
+import 'package:edustack/config/active_screens.dart';
 import 'package:edustack/config/databse.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 class GiveAdminAccess extends StatefulWidget {
-  const GiveAdminAccess({super.key});
+  final Function mainSetState;
+  const GiveAdminAccess({super.key, required this.mainSetState});
 
   @override
   State<GiveAdminAccess> createState() => _GiveAdminAccessState();
@@ -36,10 +38,26 @@ class _GiveAdminAccessState extends State<GiveAdminAccess> {
           children: [
             Row(
               children: [
-                Container(
-                  height: 56,
-                  width: 56,
-                  child: const Icon(Icons.arrow_back_ios_new),
+                GestureDetector(
+                  child: Container(
+                    height: 56,
+                    width: 56,
+                    child: const Icon(Icons.arrow_back_ios_new),
+                  ),
+                  onTap: () {
+                    widget.mainSetState(() {
+                      ActiveScreen.SIGNUPSCREEN = false;
+                      ActiveScreen.HOMESCREEN = false;
+                      ActiveScreen.COURSECONTENTSCREEN = false;
+                      ActiveScreen.LOGINSCREEN = false;
+                      ActiveScreen.COURSESCREEN = false;
+                      ActiveScreen.ADDCOURSESCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                      ActiveScreen.ADDADMINSCREEN = false;
+                      ActiveScreen.ADDSCREENNAVIGATOR = true;
+                    });
+                  },
                 ),
                 Expanded(
                   child: Container(

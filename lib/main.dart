@@ -3,6 +3,8 @@ import 'package:edustack/admin/add_course.dart';
 import 'package:edustack/admin/add_course_content.dart';
 import 'package:edustack/admin/add_course_topic_content.dart';
 import 'package:edustack/admin/give_admin_access.dart';
+import 'package:edustack/admin/screen_navigator.dart';
+import 'package:edustack/config/constant.dart';
 
 import 'package:edustack/home.dart';
 import 'package:edustack/config/active_screens.dart';
@@ -35,7 +37,23 @@ class _MyAppState extends State<MyApp> {
       return Edutask(mainSetState: setState);
     } else if (ActiveScreen.COURSECONTENTSCREEN) {
       return CourseContent(mainSetState: setState);
+    } else if (ActiveScreen.ADDCOURSESCREEN &&
+        AppConstants.CURRENTUSER!.isAdmin == 1) {
+      return AddCourse(mainSetState: setState);
+    } else if (ActiveScreen.ADDCOURSECONTENTSCREEN &&
+        AppConstants.CURRENTUSER!.isAdmin == 1) {
+      return AddCourseContent(mainSetState: setState);
+    } else if (ActiveScreen.ADDCOURSECONTENTTOPICSCREEN &&
+        AppConstants.CURRENTUSER!.isAdmin == 1) {
+      return AddCourseTopicContent(mainSetState: setState);
+    } else if (ActiveScreen.ADDADMINSCREEN &&
+        AppConstants.CURRENTUSER!.isAdmin == 1) {
+      return GiveAdminAccess(mainSetState: setState);
+    } else if (ActiveScreen.ADDSCREENNAVIGATOR &&
+        AppConstants.CURRENTUSER!.isAdmin == 1) {
+      return AddDataScreenSelectorForAdmin(mainSetState: setState);
     }
+    return null;
   }
 
   @override
@@ -47,7 +65,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: GiveAdminAccess(),
+      home: getActiveScreen(),
     );
   }
 }

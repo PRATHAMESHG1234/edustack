@@ -24,12 +24,12 @@ class _HomeState extends State<Home> {
     print("////////////");
     _dataBaseManager = DataBaseManager();
     _getPrimaryData();
+    AppConstants.SELECTEDCOURSE = null;
+    AppConstants.SELECTEDTOPIC = null;
   }
 
   Future<void> _getPrimaryData() async {
     final localDb = await _dataBaseManager;
-    var ret = await localDb!.getTopicContentByCourseContentId(1);
-    print("=-=-=-=-=-=-=-=$ret");
 
     List<CoursesModelClass> primarycourses = await localDb!.getAllCourses();
     setState(() {
@@ -59,24 +59,20 @@ class _HomeState extends State<Home> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         SizedBox(
                           child: Image.asset(
                             "assets/homeImage.png",
                           ),
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Hi ${AppConstants.CURRENTUSER!.name}",
-                            style: GoogleFonts.jost(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 30,
-                                color: Colors.white),
-                          ),
+                        Text(
+                          "Hi ${AppConstants.CURRENTUSER!.name}",
+                          style: GoogleFonts.jost(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 30,
+                              color: Colors.white),
                         ),
                       ],
                     ),
@@ -137,13 +133,10 @@ class _HomeState extends State<Home> {
                                     ActiveScreen.COURSECONTENTSCREEN = false;
                                     ActiveScreen.LOGINSCREEN = false;
                                     ActiveScreen.COURSESCREEN = true;
-                                    AppConstants.SELECTEDCOURSETITLE =
-                                        courses[index].title;
+                                    AppConstants.SELECTEDCOURSE =
+                                        courses[index];
 
-                                    widget.mainSetState(() {
-                                      AppConstants.SELECTEDCOURSEID =
-                                          courses[index].id!;
-                                    });
+                                    widget.mainSetState(() {});
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(20),
@@ -162,12 +155,15 @@ class _HomeState extends State<Home> {
                                             Radius.circular(10))),
                                     child: Column(
                                       children: [
-                                        Text(
-                                          courses[index].title,
-                                          style: GoogleFonts.anekTamil(
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 20,
-                                              color: Colors.white),
+                                        Container(
+                                          height: 52,
+                                          child: Text(
+                                            courses[index].title,
+                                            style: GoogleFonts.anekTamil(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 20,
+                                                color: Colors.white),
+                                          ),
                                         ),
                                         SizedBox(height: 6),
                                         SizedBox(
@@ -239,8 +235,7 @@ class _HomeState extends State<Home> {
                                     ActiveScreen.COURSECONTENTSCREEN = false;
                                     ActiveScreen.LOGINSCREEN = false;
                                     ActiveScreen.COURSESCREEN = true;
-                                    // AppConstants.SELECTEDCOURSETITLE =
-                                    //     courses[index].title;
+
                                     widget.mainSetState(() {});
                                   },
                                   child: Container(
@@ -339,7 +334,20 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: (AppConstants.CURRENTUSER!.isAdmin == 1)
           ? FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                widget.mainSetState(() {
+                  ActiveScreen.SIGNUPSCREEN = false;
+                  ActiveScreen.HOMESCREEN = false;
+                  ActiveScreen.COURSECONTENTSCREEN = false;
+                  ActiveScreen.LOGINSCREEN = false;
+                  ActiveScreen.COURSESCREEN = false;
+                  ActiveScreen.ADDCOURSESCREEN = false;
+                  ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                  ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                  ActiveScreen.ADDADMINSCREEN = false;
+                  ActiveScreen.ADDSCREENNAVIGATOR = true;
+                });
+              },
               child: Icon(Icons.add),
             )
           : null,

@@ -1,10 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:edustack/config/active_screens.dart';
 import 'package:edustack/config/databse.dart';
+import 'package:edustack/config/model_classes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 class AddCourse extends StatefulWidget {
-  const AddCourse({super.key});
+  final Function mainSetState;
+  const AddCourse({super.key, required this.mainSetState});
 
   @override
   State<AddCourse> createState() => _AddCourseState();
@@ -28,6 +33,55 @@ class _AddCourseState extends State<AddCourse> {
     _dataBaseManager = DataBaseManager();
   }
 
+  Future<void> _addNewCourse() async {
+    bool authValidation = _formKey.currentState!.validate();
+    bool retVal;
+    print(authValidation);
+    if (authValidation) {
+      print("hii i get call");
+      CoursesModelClass newCourse = CoursesModelClass(
+          title: _courseNameController!.text.trim(),
+          startDate: _startDateController!.text.trim(),
+          endDate: _endDateController!.text.trim(),
+          imagePath: _imagePathController!.text.trim());
+      retVal = await _dataBaseManager!.insertCourseDetails(newCourse);
+      if (retVal) {
+        widget.mainSetState(() {
+          ActiveScreen.SIGNUPSCREEN = false;
+          ActiveScreen.HOMESCREEN = true;
+          ActiveScreen.COURSECONTENTSCREEN = false;
+          ActiveScreen.LOGINSCREEN = false;
+          ActiveScreen.COURSESCREEN = false;
+          ActiveScreen.ADDCOURSESCREEN = false;
+          ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+          ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+          ActiveScreen.ADDADMINSCREEN = false;
+          ActiveScreen.ADDSCREENNAVIGATOR = false;
+        });
+      }
+
+      if (retVal) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Course Added Successful"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Course Addedition Failed"),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Course Addedition Failed"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,14 +92,30 @@ class _AddCourseState extends State<AddCourse> {
           children: [
             Row(
               children: [
-                Container(
-                  height: 56,
-                  width: 56,
-                  child: const Icon(Icons.arrow_back_ios_new),
+                GestureDetector(
+                  child: Container(
+                    height: 56,
+                    width: 56,
+                    child: const Icon(Icons.arrow_back_ios_new),
+                  ),
+                  onTap: () {
+                    widget.mainSetState(() {
+                      ActiveScreen.SIGNUPSCREEN = false;
+                      ActiveScreen.HOMESCREEN = false;
+                      ActiveScreen.COURSECONTENTSCREEN = false;
+                      ActiveScreen.LOGINSCREEN = false;
+                      ActiveScreen.COURSESCREEN = false;
+                      ActiveScreen.ADDCOURSESCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                      ActiveScreen.ADDADMINSCREEN = false;
+                      ActiveScreen.ADDSCREENNAVIGATOR = true;
+                    });
+                  },
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(right: 45),
+                    padding: const EdgeInsets.only(right: 45),
                     alignment: Alignment.center,
                     child: Text(
                       "Add Course",
@@ -121,7 +191,7 @@ class _AddCourseState extends State<AddCourse> {
                         decoration: InputDecoration(
                           hintStyle: GoogleFonts.inter(
                               fontWeight: FontWeight.w400, fontSize: 14),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                               borderSide: BorderSide(
                                 // style: BorderStyle.none,
                                 color: Color.fromRGBO(102, 112, 133, 1),
@@ -290,7 +360,7 @@ class _AddCourseState extends State<AddCourse> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Divider(
+                    const Divider(
                       thickness: 0.5,
                     ),
                     const SizedBox(
@@ -301,19 +371,19 @@ class _AddCourseState extends State<AddCourse> {
                       style: GoogleFonts.inter(
                           fontWeight: FontWeight.w400,
                           fontSize: 14,
-                          color: Color.fromRGBO(102, 112, 133, 1)),
+                          color: const Color.fromRGBO(102, 112, 133, 1)),
                     )
                   ],
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             GestureDetector(
               child: Container(
                 alignment: Alignment.center,
-                padding:
-                    EdgeInsets.only(left: 10, top: 18, right: 10, bottom: 18),
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.only(
+                    left: 10, top: 18, right: 10, bottom: 18),
+                decoration: const BoxDecoration(
                     color: Color.fromRGBO(0, 46, 150, 1),
                     borderRadius: BorderRadius.all(Radius.circular(8))),
                 child: Text(
@@ -321,13 +391,14 @@ class _AddCourseState extends State<AddCourse> {
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                    textStyle: TextStyle(
+                    color: const Color.fromRGBO(255, 255, 255, 1),
+                    textStyle: const TextStyle(
                       letterSpacing: 3,
                     ),
                   ),
                 ),
               ),
+              onTap: _addNewCourse,
             )
           ],
         ),

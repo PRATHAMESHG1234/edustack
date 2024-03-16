@@ -1,10 +1,14 @@
+import 'package:edustack/config/active_screens.dart';
+import 'package:edustack/config/constant.dart';
 import 'package:edustack/config/databse.dart';
+import 'package:edustack/config/model_classes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 class AddCourseTopicContent extends StatefulWidget {
-  const AddCourseTopicContent({super.key});
+  final Function mainSetState;
+  const AddCourseTopicContent({super.key, required this.mainSetState});
 
   @override
   State<AddCourseTopicContent> createState() => _AddCourseTopicContentState();
@@ -26,6 +30,56 @@ class _AddCourseTopicContentState extends State<AddCourseTopicContent> {
     _dataBaseManager = DataBaseManager();
   }
 
+  Future<void> _addContentTopic() async {
+    bool authValidation = _formKey.currentState!.validate();
+    bool retVal;
+    print(authValidation);
+    if (authValidation) {
+      print("hii i get call");
+      TopicContent newContentTopic = TopicContent(
+          point: _topicNameController!.text.trim(),
+          explanation: _explainationController!.text.trim(),
+          code: _topicCodeController!.text.trim(),
+          courseContentId: AppConstants.SELECTEDTOPIC!.id!);
+
+      retVal = await _dataBaseManager!.insertTopicContent(newContentTopic);
+      if (retVal) {
+        widget.mainSetState(() {
+          ActiveScreen.SIGNUPSCREEN = false;
+          ActiveScreen.HOMESCREEN = true;
+          ActiveScreen.COURSECONTENTSCREEN = false;
+          ActiveScreen.LOGINSCREEN = false;
+          ActiveScreen.COURSESCREEN = false;
+          ActiveScreen.ADDCOURSESCREEN = false;
+          ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+          ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+          ActiveScreen.ADDADMINSCREEN = false;
+          ActiveScreen.ADDSCREENNAVIGATOR = false;
+        });
+      }
+
+      if (retVal) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Course Content Added Successful"),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Course Content Addedition Failed"),
+          ),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Course Content Addedition Failed"),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +90,26 @@ class _AddCourseTopicContentState extends State<AddCourseTopicContent> {
           children: [
             Row(
               children: [
-                Container(
-                  height: 56,
-                  width: 56,
-                  child: const Icon(Icons.arrow_back_ios_new),
+                GestureDetector(
+                  child: Container(
+                    height: 56,
+                    width: 56,
+                    child: const Icon(Icons.arrow_back_ios_new),
+                  ),
+                  onTap: () {
+                    widget.mainSetState(() {
+                      ActiveScreen.SIGNUPSCREEN = false;
+                      ActiveScreen.HOMESCREEN = false;
+                      ActiveScreen.COURSECONTENTSCREEN = false;
+                      ActiveScreen.LOGINSCREEN = false;
+                      ActiveScreen.COURSESCREEN = false;
+                      ActiveScreen.ADDCOURSESCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                      ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                      ActiveScreen.ADDADMINSCREEN = false;
+                      ActiveScreen.ADDSCREENNAVIGATOR = true;
+                    });
+                  },
                 ),
                 Expanded(
                   child: Container(
@@ -275,6 +345,7 @@ class _AddCourseTopicContentState extends State<AddCourseTopicContent> {
                   ),
                 ),
               ),
+              onTap: _addContentTopic,
             )
           ],
         ),
