@@ -24,13 +24,25 @@ class _HomeState extends State<Home> {
     print("////////////");
     _dataBaseManager = DataBaseManager();
     _getPrimaryData();
+
     AppConstants.SELECTEDCOURSE = null;
     AppConstants.SELECTEDTOPIC = null;
   }
 
   Future<void> _getPrimaryData() async {
     final localDb = await _dataBaseManager;
-
+    bool adminExists = await localDb!.adminExists();
+    if (!adminExists) {
+      UserModelClass admin = UserModelClass(
+        name: 'Admin',
+        email: 'parth123@example.com',
+        password: 'Prathamesh@2002',
+        isAdmin: 1,
+      );
+      await localDb!.insertUser(admin);
+    } else {
+      print('Admin user already exists.');
+    }
     List<CoursesModelClass> primarycourses = await localDb!.getAllCourses();
     setState(() {
       courses = primarycourses;
@@ -45,8 +57,52 @@ class _HomeState extends State<Home> {
         child: Column(
           children: [
             Container(
+              height: 30,
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(44, 55, 149, 0.57),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                color: Color.fromRGBO(44, 55, 149, 0.57),
+              ),
+              child: Row(
+                children: [
+                  Spacer(),
+                  GestureDetector(
+                    child: Container(
+                      height: 36,
+                      width: 36,
+                      margin: EdgeInsets.all(10),
+                      child: Icon(
+                        Icons.logout_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      widget.mainSetState(() {
+                        ActiveScreen.SIGNUPSCREEN = false;
+                        ActiveScreen.HOMESCREEN = false;
+                        ActiveScreen.COURSECONTENTSCREEN = false;
+                        ActiveScreen.LOGINSCREEN = true;
+                        ActiveScreen.COURSESCREEN = false;
+                        ActiveScreen.ADDCOURSESCREEN = false;
+                        ActiveScreen.ADDCOURSECONTENTSCREEN = false;
+                        ActiveScreen.ADDCOURSECONTENTTOPICSCREEN = false;
+                        ActiveScreen.ADDADMINSCREEN = false;
+                        ActiveScreen.ADDSCREENNAVIGATOR = true;
+                        AppConstants.CURRENTUSER = null;
+                        AppConstants.SELECTEDCOURSE = null;
+                        AppConstants.SELECTEDTOPIC = null;
+                      });
+                    },
+                  )
+                ],
+              ),
+            ),
+            Container(
               padding: const EdgeInsets.only(
-                  top: 120, left: 20, right: 10, bottom: 80),
+                  top: 50, left: 20, right: 10, bottom: 80),
               decoration: const BoxDecoration(
                 color: Color.fromRGBO(44, 55, 149, 0.57),
                 borderRadius: BorderRadius.only(
@@ -166,11 +222,20 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         SizedBox(height: 6),
-                                        SizedBox(
+                                        Container(
                                           height: 98,
-                                          width: 134,
-                                          child: Image.asset(
-                                              courses[index].imagePath),
+                                          width:
+                                              98, // Make width and height equal to maintain a circular shape
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            // color: Colors.black,
+                                          ),
+                                          child: ClipOval(
+                                            child: Image.asset(
+                                              courses[index].imagePath,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),
@@ -235,7 +300,8 @@ class _HomeState extends State<Home> {
                                     ActiveScreen.COURSECONTENTSCREEN = false;
                                     ActiveScreen.LOGINSCREEN = false;
                                     ActiveScreen.COURSESCREEN = true;
-
+                                    AppConstants.SELECTEDCOURSE =
+                                        courses[index];
                                     widget.mainSetState(() {});
                                   },
                                   child: Container(

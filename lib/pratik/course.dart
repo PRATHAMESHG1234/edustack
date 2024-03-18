@@ -144,7 +144,7 @@ class _EdutaskState extends State<Edutask> {
                   Container(
                     height: 136,
                     width: 136,
-                    padding: const EdgeInsets.all(7),
+                    // padding: const EdgeInsets.all(7),
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                           colors: [
@@ -156,7 +156,20 @@ class _EdutaskState extends State<Edutask> {
                           end: Alignment.bottomCenter),
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset(AppConstants.SELECTEDCOURSE!.imagePath),
+                    child: Container(
+                      height: 136,
+                      width: 136,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        // color: Colors.black,
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          AppConstants.SELECTEDCOURSE!.imagePath,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

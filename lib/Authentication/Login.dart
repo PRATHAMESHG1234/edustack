@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
   TextEditingController? _nameController;
   TextEditingController? _emailController;
   TextEditingController? _passwordController;
+  TextEditingController? _confirmPasswordController;
   DataBaseManager? _dataBaseManager;
   bool _isObscure = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -30,7 +31,180 @@ class _LoginState extends State<Login> {
     _nameController = TextEditingController(text: "");
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
     _dataBaseManager = DataBaseManager();
+  }
+
+  void showBottomSheet() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30.0),
+            topRight: Radius.circular(30.0),
+          ),
+        ),
+        isDismissible: true,
+        context: context,
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+
+                ///TO AVOID THE KEYBOARD OVERLAP THE SCREEN
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Create Task",
+                    style: GoogleFonts.quicksand(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 22,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Title",
+                        style: GoogleFonts.quicksand(
+                          color: const Color.fromRGBO(111, 81, 255, 1),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(111, 81, 255, 1),
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.purpleAccent),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        "Description",
+                        style: GoogleFonts.quicksand(
+                          color: const Color.fromRGBO(111, 81, 255, 1),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      TextField(
+                        controller: _passwordController,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(111, 81, 255, 1),
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.purpleAccent),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        "Date",
+                        style: GoogleFonts.quicksand(
+                          color: const Color.fromRGBO(111, 81, 255, 1),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      TextField(
+                        controller: _confirmPasswordController,
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          suffixIcon: const Icon(Icons.date_range_rounded),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color.fromRGBO(111, 81, 255, 1),
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide:
+                                const BorderSide(color: Colors.purpleAccent),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onTap: () async {},
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 50,
+                    width: 300,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(30)),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: const Color.fromRGBO(111, 81, 255, 1),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Submit",
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   void loginOrSignUpUser() async {
@@ -248,12 +422,15 @@ class _LoginState extends State<Login> {
                       height: (widget.isSignup) ? 0 : 10,
                     ),
                     (!widget.isSignup)
-                        ? Text(
-                            "forget password?",
-                            style: GoogleFonts.anekTamil(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 19,
+                        ? GestureDetector(
+                            child: Text(
+                              "forget password?",
+                              style: GoogleFonts.anekTamil(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 19,
+                              ),
                             ),
+                            onTap: showBottomSheet,
                           )
                         : const SizedBox(),
                     const SizedBox(

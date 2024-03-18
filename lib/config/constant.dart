@@ -43,8 +43,9 @@ class DatabaseTableConstants {
     )
 ''';
 
-  static const DBNAME = "newmyEduStack.db";
-
+  static const DBNAME =
+      "newmyEduStack.db"; /////*****this is main db if error happen we going to use this */
+  // static const DBNAME = "realbhaisachmehaiyahiEduStack.db";
   static const USERTABLENAME = "users";
   static const COURSETABLENAME = "courses";
   static const COURSECONTENTLISTTABLENAME = "course_contents";

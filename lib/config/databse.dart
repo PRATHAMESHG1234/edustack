@@ -35,6 +35,21 @@ class DataBaseManager {
     }
   }
 
+  Future<bool> adminExists() async {
+    final localDB = await database;
+    try {
+      List<Map<String, dynamic>> result = await localDB.query(
+        DatabaseTableConstants.USERTABLENAME,
+        where: 'IsAdmin = ?',
+        whereArgs: [1],
+      );
+      return result.isNotEmpty;
+    } catch (e) {
+      print('Error checking admin existence: $e');
+      return false;
+    }
+  }
+
   Future<bool> insertUser(UserModelClass user) async {
     try {
       final localDB = await database;
@@ -44,7 +59,9 @@ class DataBaseManager {
         user.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      AppConstants.CURRENTUSER = user;
+      if (user.isAdmin != 1) {
+        AppConstants.CURRENTUSER = user;
+      }
       return true;
     } catch (e) {
       print("Error inserting user: $e");
